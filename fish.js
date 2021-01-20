@@ -25,6 +25,8 @@ canvas.addEventListener('mousedown', function(){
 // Player
 const playerLeft = new Image();
 playerLeft.src = 'img/fish.png';
+const playerRight = new Image();
+playerRight.src = 'img/fish2.png';
 class Player {
     constructor(){
         this.x = 0;
@@ -38,8 +40,11 @@ class Player {
         this.spriteWidth = 498;
     }
     update(){
+
         const dx = this.x - mouse.x;
         const dy = this.y - mouse.y;
+        let theta = Math.atan2(dy, dx);
+        this.angle = theta;
         if (mouse.x != this.x) {
             this.x -= dx/50;
         }
@@ -54,10 +59,23 @@ class Player {
         ctx.fill();
         ctx.closePath();
         ctx.fillRect(this.x,this.y,this.radius,10);
-        ctx.drawImage(playerLeft, this.frameX * this.spriteWidth,
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        if (this.x >= mouse.x){
+            ctx.drawImage(playerLeft, this.frameX * this.spriteWidth,
+            this.frameY * this.spriteHeight,
+            this.spriteWidth, this.spriteHeight,
+            0-50, 0-35, this.spriteWidth/5, this.spriteHeight/5);
+        } else {
+        ctx.drawImage(playerRight, this.frameX * this.spriteWidth,
         this.frameY * this.spriteHeight,
         this.spriteWidth, this.spriteHeight,
-        this.x-50, this.y-35, this.spriteWidth/5, this.spriteHeight/5);
+        0-50, 0-35, this.spriteWidth/5, this.spriteHeight/5);
+        }
+        ctx.restore();
     }
 }
 const player = new Player();
@@ -66,6 +84,8 @@ const player = new Player();
 const bubbleArray = [];
 const foodMix = new Image();
 foodMix.src = 'img/food1.png';
+const foodMix2 = new Image();
+foodMix2.src = 'img/food2.png';
 class Bubble {
     constructor(){
         this.x = Math.random() * canvas.width;
@@ -76,10 +96,12 @@ class Bubble {
         this.frame = 0;
         this.spriteHeight = 327;
         this.spriteWidth = 520;
+        this.spriteWidth2 = 550;
         this.speed = Math.random() * 5 + 1;
         this.distance;
         this.counted = false;
         this.sound = Math.random() <= 0.5 ? 'sound1' : 'sound2';
+        this.food = Math.random() <= 0.5 ? 'food1' : 'food2';
 
     }
     update(){
@@ -89,14 +111,17 @@ class Bubble {
         this.distance = Math.sqrt(dx*dx + dy*dy);
     }
     draw(){
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.stroke();
+        if(this.food == 'food1'){
         ctx.drawImage(foodMix, this.frameX * this.spriteWidth,
             this.frameY * this.spriteHeight,
             this.spriteWidth, this.spriteHeight,
             this.x-35, this.y-20, this.spriteWidth/7, this.spriteHeight/7);
+        }else{
+        ctx.drawImage(foodMix2, this.frameX * this.spriteWidth2,
+            this.frameY * this.spriteHeight,
+            this.spriteWidth2, this.spriteHeight,
+            this.x-35, this.y-20, this.spriteWidth/7, this.spriteHeight/6);
+        }
     }
 }
 
