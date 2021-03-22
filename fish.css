@@ -3,11 +3,11 @@
     width: 950px;
     height: 650px;
     border: 4px solid black;
-    background-color: rgb(211, 243, 255);
     display: block;
     margin: auto;
     transform: translateY(40px);
-    z-index: 1;
+    background-position: inherit;
+    background: linear-gradient(to bottom, lightblue, darkblue, black);
 }
 body {
     background-image: url(img/background.jpg);
